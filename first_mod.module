@@ -1,0 +1,140 @@
+<?php
+// hook_help
+function first_mod_help($path,$arg){
+  switch($path){
+  case 'admin/help#first_mod':
+    $output = "This is the help system";
+    $output .= "this is more help";
+    return $output;
+    
+  }
+  }
+
+
+
+
+function first_mod_permission(){
+  return 
+    array(
+	  'access demo' => 
+	  array(
+		'title' => t('Access Drupal Camp Demo')
+		)
+	  );
+}
+
+
+
+//hook_menu
+function first_mod_menu(){
+  $items['foo1'] = 
+    array(
+	  'title' => 'A simple page',
+	  'page callback' => 'foo1_page',
+	  'access callback' => TRUE,
+	  'type' => MENU_CALLBACK,
+	  );
+
+  $items['foo2'] = 
+    array(
+	  'title' => 'A simple page with permissions',
+	  'page callback' => 'foo2_page',
+	  'access callback' => 'user_access',
+	  'access arguments' => array('access demo'),
+	  'type' => MENU_CALLBACK,
+	  );
+
+  $items['myform'] = 
+    array(
+	  'title' => 'A simple form demo',
+	  'page callback' => 'myform_page',
+	  'access arguments' => TRUE,
+	  'type' => MENU_CALLBACK,
+	  );
+
+
+
+  
+  return $items;
+}
+
+
+function foo1_page(){
+  $markup = '';
+  $markup .= "<h1>Heading 1</h1>";
+  $markup .= "<p>And now a paragraph</p>";
+  return array('#markup' => $markup);
+}
+
+
+function foo2_page(){
+  $markup = '';
+  $markup .= "<h1>A Page With Permissions</h1>";
+  $markup .= "<p>And now a paragraph</p>";
+  return array('#markup' => $markup);
+}
+
+
+function myform_page(){
+  $markup = 'Here is our form:<br>';
+  $foo = drupal_get_form('myformelements');
+  $markup .= drupal_render($foo);
+  return array('#markup' => $markup);
+}
+
+
+
+function myformelements(){
+  $form = array();
+
+  $form['first_name'] = array(
+			      '#type' => 'textfield',
+			      '#field_prefix' => 'Enter your first name:',
+			      '#description' => 'Put Bob if your name is Bob',
+			      '#weight' => 1,			      
+			      '#attributes' => array(
+						     'placeholder' => t('Bob')
+						     ),			      
+			      );
+
+  
+  $form['email'] = array(
+			 '#type' => 'textfield',
+			 '#field_prefix' => 'Enter your email:',
+			 '#weight' => 2,
+			 '#attributes' => array(
+						'placeholder' => t('bob@example.com')
+						),
+    );
+
+
+  $form['submit'] = array(
+			  '#type' => 'submit',
+			  '#value' => 'Put whatever you want here',
+			  '#weight' => 3,
+			  );
+
+
+
+  $form['#validate'][] = 'my_validate_function';
+  $form['#submit'][] = 'my_submit_function';
+
+  return $form;
+}
+
+
+
+
+function my_validate_function($form,&$form_state){
+  $email = $form_state['values']['email'];
+  if( preg_match("/@/",$email) == 0 ) {
+    form_set_error('email',t('Oops!  You need an @ symbol!'));
+  }
+}
+
+
+function my_submit_function($form,&$form_state){
+  $_SESSION['drupalcamp']['email'] = $form_state['values']['email'];
+  $_SESSION['drupalcamp']['first_name'] = $form_state['values']['first_name'];
+  $form_state['redirect'] = 'http://www.google.com';
+}

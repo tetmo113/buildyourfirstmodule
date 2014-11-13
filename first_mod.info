@@ -1,0 +1,6 @@
+; this is a comment line
+name = Build Your First Module Demo
+core = 7.x
+package = Drupal Camp Ohio
+description = A really cool presentation on building your first module
+version = 7.x-beta

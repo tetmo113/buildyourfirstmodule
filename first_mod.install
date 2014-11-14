@@ -1,0 +1,48 @@
+<?php
+
+
+
+  /*
+function first_mod_install(){
+  // nothing
+  }
+
+
+function first_mod_uninstall(){
+  // nothing
+}
+  */
+// hook_schema
+function first_mod_schema(){
+  $schema['myform_data'] = 
+    array(
+	  'description' => 'Stores form iput data like email and first name.',
+	  'fields' => array(
+			    'id' => array(
+					  'type' => 'int',
+					  'unsigned' => TRUE,
+					  'not null' => TRUE,
+					  'default' => 0,
+					  'description' => 'The ID',
+					  ),                                                             
+			    'email' => array(
+					     'type' => 'text',
+					     'not null' => TRUE,
+					     'size' => 'big',
+					     'description' => 'Their email',
+					     ),
+			    'first_name' => array(
+						  'type' => 'text',
+						  'not null' => TRUE,
+						  'size' => 'big',
+						  'description' => 'Their first name',
+						  ),
+			    ),
+	  'primary key' => array('id'),
+	  );
+  
+  return $schema;
+}
+
+
+
